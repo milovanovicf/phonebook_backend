@@ -8,6 +8,14 @@ app.use(express.json());
 app.use(morgan('tiny'));
 app.use(express.static('dist'));
 
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body);
+});
+
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+);
+
 let persons = [
   {
     id: '1',
@@ -68,6 +76,7 @@ app.get('/api/persons/:id', (request, response) => {
   if (person) {
     response.json(person);
   } else {
+    response.json('Not found');
     response.status(404).end();
   }
 });
